@@ -579,3 +579,4 @@ System.out.println(executeProcResponse);
 System.out.println("Check 'gpudb.log' or 'gpudb-proc.log' for execution information");
 System.out.println();
 ```
+
