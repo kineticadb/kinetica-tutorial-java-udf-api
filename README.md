@@ -1,10 +1,10 @@
 # Kinetica Java UDF API Tutorial #
 
-This project contains the **6.2** version of the **Java UDF API Tutorial**.
+This project contains the **7.0** version of the **Java UDF API Tutorial**.
 
-This guide exists on-line at:  [Kinetica Java UDF API Tutorial](http://www.kinetica.com/docs/6.2/udf/java/tutorial.html)
+This guide exists on-line at:  [Kinetica Java UDF API Tutorial](http://www.kinetica.com/docs/udf/java/tutorial.html)
 
-More information can be found at:  [Kinetica Documentation](http://www.kinetica.com/docs/6.2/index.html)
+More information can be found at:  [Kinetica Documentation](http://www.kinetica.com/docs/index.html)
 
 -----
 
@@ -27,18 +27,18 @@ this exercise is purely to demonstrate the many facets of the *UDF* API.
 
 ## References
 
-* [Java UDF Reference](https://www.kinetica.com/docs/6.2/udf/java/writing.html)
+* [Java UDF Reference](https://www.kinetica.com/docs/udf/java/writing.html)
   -- detailed description of the entire *UDF* API
-* [Running UDFs](https://www.kinetica.com/docs/6.2/udf/java/running.html)
+* [Running UDFs](https://www.kinetica.com/docs/udf/java/running.html)
   -- detailed description on running *Java* UDFs
-* [Example UDFs](https://www.kinetica.com/docs/6.2/udf/java/examples.html)
+* [Example UDFs](https://www.kinetica.com/docs/udf/java/examples.html)
   -- example *UDFs* written in *Java*
 
 
 ## Prerequisites
 
 The general prerequisites for using *UDFs* in *Kinetica* can be found on
-the [UDF Implementation](https://www.kinetica.com/docs/6.2/udf/index.html) page.
+the [UDF Implementation](https://www.kinetica.com/docs/udf/index.html) page.
 
 
 ### Data Files
@@ -49,7 +49,7 @@ There are four files associated with the *Java UDF* tutorial:
   tables and creates the proc and executes it
 * a UDF, ``UdfTcJavaProc.java``, that contains a table copying example
 * a CSV input file, ``rank_tom.csv``
-* an [Avro-shaded native Java API JAR file](http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/6.2.1/gpudb-api-6.2.1-avroshaded.jar)
+* an [Avro-shaded native Java API JAR file](http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.0.0.0/gpudb-api-7.0.0.0-avroshaded.jar)
   that is used to compile the *UDF* management file
 
 
@@ -80,25 +80,25 @@ API must also be installed to use the *UDF* simulator (details found in
 
 In the desired directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v6.2.0``:
+``v7.0``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-tutorial-java-udf-api.git
 
 In the same directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v6.2.0``:
+``v7.0``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-udf-api-java.git
 
 In the same directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v6.2.0``:
+``v7.0``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-api-python.git
 
 In the same directory, run the following:
 
-     wget http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/6.2.1/gpudb-api-6.2.1-avroshaded.jar
+     wget http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.0.0.0/gpudb-api-7.0.0.0-avroshaded.jar
 
 Change directory into the newly downloaded native *Python* API repository:
 
@@ -121,17 +121,13 @@ Change directory into the *Java UDF* tutorial directory:
 
     cd ../kinetica-tutorial-java-udf-api
 
-**NOTE:** To install the *Kinetica* API via PyPI instead:
-
-    pip install gpudb --upgrade
-
 
 ## Development
 
-Refer to the [Java UDF API Reference](https://www.kinetica.com/docs/6.2/udf/java/writing.html)
+Refer to the [Java UDF API Reference](https://www.kinetica.com/docs/udf/java/writing.html)
 page to begin writing your own *UDF(s)*, or use the *UDF* already provided with
 the *Java UDF* tutorial repository. The steps below outline using the
-[UDF Simulator](https://www.kinetica.com/docs/6.2/udf/simulating_udfs.html) with
+[UDF Simulator](https://www.kinetica.com/docs/udf/simulating_udfs.html) with
 the *UDF* included with the *Java UDF* tutorial repository. The *UDF* simulator
 simulates the mechanics of ``executeProc()`` without actually calling it in the
 database; this is useful for developing *UDFs* piece-by-piece, so you can test
@@ -144,13 +140,13 @@ Compile the Proc file and create a JAR:
 
 Compile the Manager file and create a JAR:
 
-    javac -cp ../gpudb-api-6.2.1-avroshaded.jar UdfTcManager.java
+    javac -cp ../gpudb-api-7.0.0.0-avroshaded.jar UdfTcManager.java
     jar -cvf UdfTcManager.jar UdfTcManager*.class
 
 Run the *UDF* manager JAR with the ``init`` option, specifying the database
 host and optional port (if non-default):
 
-    java -cp '../gpudb-api-6.2.1-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
 
 In the native *Python* API directory, run the *UDF* simulator in ``execute``
 mode with the following options to simulate running the *UDF*, where ``-i``
@@ -228,11 +224,11 @@ and ``/execute/proc`` (respectively).
 Optionally, run the *UDF* manager JAR with the ``init`` option to reset the
 example tables:
 
-    java -cp '../gpudb-api-6.2.1-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
 
 Run the *UDF* manager JAR with the ``exec`` option:
 
-    java -cp '../gpudb-api-6.2.1-avroshaded.jar:UdfTcManager.jar' UdfTcManager "exec" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "exec" [<kinetica-host> [<kinetica-port>]]
 
 
 ## Execution Detail
@@ -579,4 +575,3 @@ System.out.println(executeProcResponse);
 System.out.println("Check 'gpudb.log' or 'gpudb-proc.log' for execution information");
 System.out.println();
 ```
-
