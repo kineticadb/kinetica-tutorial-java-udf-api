@@ -8,15 +8,14 @@ import java.util.*;
 
 public class UdfTcManager
 {
-    static String DATABASE_HOST = "127.0.0.1";
-    static String DATABASE_PORT = "9191";
-    static String INPUT_TABLE = "udf_tc_java_in_table";
+    static String SCHEMA = "tutorial_udf_java";
+    static String INPUT_TABLE = SCHEMA + ".udf_tc_java_in_table";
+    static String OUTPUT_TABLE = SCHEMA + ".udf_tc_java_out_table";
     static Integer MAX_RECORDS = 10000;
-    static String OUTPUT_TABLE = "udf_tc_java_out_table";
 
     static String CSV_FILE_NAME = "rank_tom.csv";
     static String JAR_HOME = "/opt/gpudb/udf/api/java/proc-api/";
-    static String JAR_FILE = "kinetica-proc-api-1.0-jar-with-dependencies.jar";
+    static String JAR_FILE = "kinetica-proc-api-7.1.0.0-jar-with-dependencies.jar";
     static String PROC_NAME = "UdfTcJavaProc";
 
     static String PROC_JAR_FILE = PROC_NAME + ".jar";
@@ -65,35 +64,42 @@ public class UdfTcManager
 
     public static void main(String[] args) throws GPUdbException
     {
-        if (args.length > 1)
-            DATABASE_HOST = args[1];
-        if (args.length > 2)
-            DATABASE_PORT = args[2];
 
-        String mode = args[0];
+        String mode = (args.length > 0) ? args[0] : null;
+        String host = (args.length > 1) ? args[1] : "localhost";
+        String username = (args.length > 2) ? args[2] : null;
+        String password = (args.length > 3) ? args[3] : null;
+
+        GPUdbBase.Options options = new GPUdbBase.Options();
+        options.setUsername(username);
+        options.setPassword(password);
+        GPUdb kinetica = new GPUdb("http://" + host + ":9191", options);
 
         switch (mode)
         {
             case "init":
-                init();
+                init(kinetica);
                 break;
             case "exec":
-                exec();
+                exec(kinetica);
                 break;
             default:
                 throw new RuntimeException();
         }
     }
 
-    public static void init() throws GPUdbException
+    public static void init(GPUdb hDb) throws GPUdbException
     {
         System.out.println();
         System.out.println("JAVA UDF TABLE COPY INITIALIZATION");
         System.out.println("==================================");
         System.out.println();
 
-        // Connect to Kinetica
-        GPUdb hDb = new GPUdb("http://" + DATABASE_HOST + ":" + DATABASE_PORT);
+        // Create the Java UDF tutorial schema if it doesn't exist
+        Map<String, String> createSchemaOptions = GPUdb.options(
+            CreateSchemaRequest.Options.NO_ERROR_IF_EXISTS, CreateSchemaRequest.Options.TRUE
+        );
+        hDb.createSchema(SCHEMA_NAME, createSchemaOptions);
 
         // Create input data table
         hDb.clearTable(INPUT_TABLE, null, GPUdb.options("no_error_if_not_exists", "true"));
@@ -126,7 +132,7 @@ public class UdfTcManager
         System.out.println(showOutputTable.get(0) + " with type id " + showOutputTable.get(3));
     }
 
-    public static void exec() throws GPUdbException
+    public static void exec(GPUdb hDb) throws GPUdbException
     {
 
         System.out.println();
@@ -136,9 +142,6 @@ public class UdfTcManager
 
         System.out.println("Reading in the 'UdfTcJavaProc.java' and 'rank_tom.csv' file as bytes...");
         System.out.println();
-
-        // Connect to Kinetica
-        GPUdb hDb = new GPUdb("http://" + DATABASE_HOST + ":" + DATABASE_PORT);
 
         try
         {
@@ -182,7 +185,7 @@ public class UdfTcManager
             );
             System.out.println("Proc executed successfully:");
             System.out.println(executeProcResponse);
-            System.out.println("Check 'gpudb.log' or 'gpudb-proc.log' for execution information");
+            System.out.println("Check the system log or 'gpudb-proc.log' for execution information");
             System.out.println();
         }
         catch (Exception e)

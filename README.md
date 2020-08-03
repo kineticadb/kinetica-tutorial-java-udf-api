@@ -1,10 +1,10 @@
 # Kinetica Java UDF API Tutorial #
 
-This project contains the **7.0** version of the **Java UDF API Tutorial**.
+This project contains the **7.1** version of the **Java UDF API Tutorial**.
 
-This guide exists on-line at:  [Kinetica Java UDF API Tutorial](http://www.kinetica.com/docs/udf/java/tutorial.html)
+This guide exists on-line at:  [Kinetica Java UDF API Tutorial](http://www.kinetica.com/docs/7.1/udf/java/tutorial.html)
 
-More information can be found at:  [Kinetica Documentation](http://www.kinetica.com/docs/index.html)
+More information can be found at:  [Kinetica Documentation](http://www.kinetica.com/docs/7.1/index.html)
 
 -----
 
@@ -27,29 +27,29 @@ this exercise is purely to demonstrate the many facets of the *UDF* API.
 
 ## References
 
-* [Java UDF Reference](https://www.kinetica.com/docs/udf/java/writing.html)
+* [Java UDF Reference](https://www.kinetica.com/docs/7.1/udf/java/writing.html)
   -- detailed description of the entire *UDF* API
-* [Running UDFs](https://www.kinetica.com/docs/udf/java/running.html)
+* [Running UDFs](https://www.kinetica.com/docs/7.1/udf/java/running.html)
   -- detailed description on running *Java* UDFs
-* [Example UDFs](https://www.kinetica.com/docs/udf/java/examples.html)
+* [Example UDFs](https://www.kinetica.com/docs/7.1/udf/java/examples.html)
   -- example *UDFs* written in *Java*
 
 
 ## Prerequisites
 
 The general prerequisites for using *UDFs* in *Kinetica* can be found on
-the [UDF Implementation](https://www.kinetica.com/docs/udf/index.html) page.
+the [UDF Implementation](https://www.kinetica.com/docs/7.1/udf/index.html) page.
 
 
 ### Data Files
 
 There are four files associated with the *Java UDF* tutorial:
 
-* a management file, ``UdfTcManager.java``, that creates the input and output
-  tables and creates the proc and executes it
+* a management file, ``UdfTcManager.java``, that creates the schema, input & 
+  output tables, and creates the proc and executes it
 * a UDF, ``UdfTcJavaProc.java``, that contains a table copying example
 * a CSV input file, ``rank_tom.csv``
-* an [Avro-shaded native Java API JAR file](http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.0.0.0/gpudb-api-7.0.0.0-avroshaded.jar)
+* an [Avro-shaded native Java API JAR file](http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.1.0.0/gpudb-api-7.1.0.0-avroshaded.jar)
   that is used to compile the *UDF* management file
 
 
@@ -80,25 +80,28 @@ API must also be installed to use the *UDF* simulator (details found in
 
 In the desired directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v7.0``:
+``v7.1``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-tutorial-java-udf-api.git
 
 In the same directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v7.0``:
+``v7.1``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-udf-api-java.git
 
 In the same directory, run the following but be sure to replace
 ``<kinetica-version>`` with the name of the installed Kinetica version, e.g.,
-``v7.0``:
+``v7.1``:
 
      git clone -b release/<kinetica-version> --single-branch https://github.com/kineticadb/kinetica-api-python.git
 
-In the same directory, run the following:
+In the same directory, run the following to download the 
+*Avro-shaded native Java API JAR*, ensuring you replace the ``X`` with a minor
+version number that matches the version of the database (if possible), e.g.,
+``7.1.0.0``:
 
-     wget http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.0.0.0/gpudb-api-7.0.0.0-avroshaded.jar
+     wget http://files.kinetica.com/nexus/content/repositories/releases/com/gpudb/gpudb-api/7.1.X.0/gpudb-api-7.1.X.0-avroshaded.jar
 
 Change directory into the newly downloaded native *Python* API repository:
 
@@ -124,10 +127,10 @@ Change directory into the *Java UDF* tutorial directory:
 
 ## Development
 
-Refer to the [Java UDF API Reference](https://www.kinetica.com/docs/udf/java/writing.html)
+Refer to the [Java UDF API Reference](https://www.kinetica.com/docs/7.1/udf/java/writing.html)
 page to begin writing your own *UDF(s)*, or use the *UDF* already provided with
 the *Java UDF* tutorial repository. The steps below outline using the
-[UDF Simulator](https://www.kinetica.com/docs/udf/simulating_udfs.html) with
+[UDF Simulator](https://www.kinetica.com/docs/7.1/udf/simulating_udfs.html) with
 the *UDF* included with the *Java UDF* tutorial repository. The *UDF* simulator
 simulates the mechanics of ``executeProc()`` without actually calling it in the
 database; this is useful for developing *UDFs* piece-by-piece, so you can test
@@ -135,35 +138,40 @@ incrementally without any database memory ramifications.
 
 Compile the Proc file and create a JAR:
 
-    javac -cp ../kinetica-udf-api-java/proc-api/target/kinetica-proc-api-1.0-jar-with-dependencies.jar UdfTcJavaProc.java
+    javac -cp ../kinetica-udf-api-java/proc-api/target/kinetica-proc-api-7.1.0.0-jar-with-dependencies.jar UdfTcJavaProc.java
     jar -cvf UdfTcJavaProc.jar UdfTcJavaProc*.class
 
-Compile the Manager file and create a JAR:
+Compile the Manager file and create a JAR, ensuring you replace the ``X`` with a
+minor version number that matches the version of the *Avro-shaded JAR* you
+downloaded in [API Download and Installation](#api-download-and-installation),
+e.g., ``7.1.0.0``:
 
-    javac -cp ../gpudb-api-7.0.0.0-avroshaded.jar UdfTcManager.java
+    javac -cp ../gpudb-api-7.1.X.0-avroshaded.jar UdfTcManager.java
     jar -cvf UdfTcManager.jar UdfTcManager*.class
 
-Run the *UDF* manager JAR with the ``init`` option, specifying the database
-host and optional port (if non-default):
+Run the *UDF* manager JAR with the ``init`` option, replacing the ``X``
+with a minor version number that matches the version of the *Avro-shaded JAR*
+you downloaded in [API Download and Installation](#api-download-and-installation)
+and optionally specifying the host and a username & password:
 
-    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.1.X.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<hostname> [<username> <password>]]
 
 In the native *Python* API directory, run the *UDF* simulator in ``execute``
 mode with the following options to simulate running the *UDF*, where ``-i``
-is the UDF input table, ``-o`` is the UDF output table, and ``-K`` is the
-*Kinetica* URL (using the appropriate values for your environment).
-Username (``-U``) & password (``-P``) can be specified, if your instance
-requires authentication:
+is the schema-qualified UDF input table, ``-o`` is the schema-qualified UDF
+output table, and ``-K`` is the *Kinetica* URL (using the appropriate values
+for your environment). Username (``-U``) & password (``-P``) can be specified,
+if your instance requires authentication:
 
      python ../kinetica-api-python/examples/udfsim.py execute -d \
-         -i udf_tc_java_in_table -o udf_tc_java_out_table \
+         -i [<schema>.]<input-table> -o [<schema>.]<output-table> \
          -K http://<kinetica-host>:<kinetica-port> \
          [-U <kinetica-user> -P <kinetica-pass>]
 
 For instance:
 
      python ../kinetica-api-python/examples/udfsim.py execute -d \
-         -i udf_tc_java_in_table -o udf_tc_java_out_table \
+         -i tutorial_udf_java.udf_tc_java_in_table -o tutorial_udf_java.udf_tc_java_out_table \
          -K http://127.0.0.1:9191 \
          -U admin -P admin123
 
@@ -179,7 +187,7 @@ prepare the execution environment for simulating the UDF:
 
 Run the *UDF*:
 
-     java -cp '../kinetica-udf-api-java/proc-api/target/kinetica-proc-api-1.0-jar-with-dependencies.jar:UdfTcJavaProc.jar' UdfTcJavaProc
+     java -cp '../kinetica-udf-api-java/proc-api/target/kinetica-proc-api-7.1.0.0-jar-with-dependencies.jar:UdfTcJavaProc.jar' UdfTcJavaProc
 
 Run the *UDF Simulator* in ``output`` mode to output the results to
 *Kinetica* (use the dry run flag ``-d`` to avoid writing to *Kinetica*),
@@ -203,7 +211,7 @@ This should output the following:
      No results
      Output:
 
-     udf_tc_java_out_table: 10000 records
+     tutorial_udf_java.udf_tc_java_out_table: 10000 records
 
 Clean the control files output by the *UDF* simulator:
 
@@ -224,11 +232,11 @@ and ``/execute/proc`` (respectively).
 Optionally, run the *UDF* manager JAR with the ``init`` option to reset the
 example tables:
 
-    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.1.X.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "init" [<hostname> [<username> <password>]]
 
 Run the *UDF* manager JAR with the ``exec`` option:
 
-    java -cp '../gpudb-api-7.0.0.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "exec" [<kinetica-host> [<kinetica-port>]]
+    java -cp '../gpudb-api-7.1.X.0-avroshaded.jar:UdfTcManager.jar' UdfTcManager "exec" [<hostname> [<username> <password>]]
 
 
 ## Execution Detail
@@ -236,8 +244,8 @@ Run the *UDF* manager JAR with the ``exec`` option:
 As mentioned previously, this section details a simple distributed *UDF* that
 copies data from one table to another. While the table copy *UDF* can run
 against multiple tables, the example run will use a single table,
-``udf_tc_java_in_table``, as input and a similar table,
-``udf_tc_java_out_table``, for output.
+``tutorial_udf_java.udf_tc_java_in_table``, as input and a similar table,
+``tutorial_udf_java.udf_tc_java_out_table``, for output.
 
 The input table will contain one *int16* column (``id``) and two *float*
 columns (``x`` and ``y``). The ``id`` column will be an ordered integer field,
@@ -274,9 +282,9 @@ The ``tom_num`` column values refer to processing nodes that contains some of
 the many shards of data inside the database. The ``rank_num`` column values
 refer to processing node containers that hold some of the processing nodes for
 the database. For example, the given CSV file determines that the data from
-``udf_tc_py_in_table`` on processing node container ``1``, processing node ``0``
-and processing node container ``2``, processing node ``0`` will be copied to
-``udf_tc_py_out_table``.
+``tutorial_udf_java.udf_tc_py_in_table`` on processing node container ``1``, processing 
+node ``0`` and processing node container ``2``, processing node ``0`` will be 
+copied to ``tutorial_udf_java.udf_tc_py_out_table``.
 
 Once the *UDF* is executed, a *UDF* instance (OS process) is spun up for each
 processing node to execute the given code against its assigned processing node.
@@ -290,13 +298,13 @@ tables to the output tables. If there isn't a match, the code will complete.
 ### Initialization (UdfTcManager.java init mode)
 
 The *init* mode calls the ``init()`` method of the ``UdfTcManager.java`` file.
-This method will create an input type and table for the *UDF* to copy data from
-and an output type and table to copy data to. Sample data will also be generated
-and placed in the input table.
+This method will create the schema, an input type and table for the *UDF* to
+copy data from, and an output type and table to copy data to. Sample data will
+also be generated and placed in the input table.
 
-To create tables using the *Java* API, a [type](https://www.kinetica.com/docs/concepts/types.html)
+To create tables using the *Java* API, a [type](https://www.kinetica.com/docs/7.1/concepts/types.html)
 needs to be defined in the system first.  The type is a class, extended from
-[RecordObject](https://www.kinetica.com/docs/api/java/com/gpudb/RecordObject.html),
+[RecordObject](https://www.kinetica.com/docs/7.1/api/java/com/gpudb/RecordObject.html),
 using annotations to describe which class instance variables are fields (i.e.
 columns), what type they are, and any special handling they should receive.  
 Each field consists of a name and a data type:
@@ -342,11 +350,24 @@ public static class OutTable extends RecordObject
 ```
 
 To interact with *Kinetica*, you must first instantiate an object of the
-``GPUdb`` class while providing the connection URL, including the host and port
-of the database server:
+``GPUdb`` class while providing the connection URL, including the host of the
+database server and optional username and password to use for logging in. This
+database object is later passed to the ``init()`` and ``exec()`` methods, which 
+take a database object ``hDB``:
 
 ```java
-GPUdb hDb = new GPUdb("http://" + DATABASE_HOST + ":" + DATABASE_PORT);
+GPUdbBase.Options options = new GPUdbBase.Options();
+options.setUsername(username);
+options.setPassword(password);
+GPUdb kinetica = new GPUdb("http://" + host + ":9191", options);
+```
+
+The schema is created if it doesn't already exist:
+```java
+Map<String, String> createSchemaOptions = GPUdb.options(
+    CreateSchemaRequest.Options.NO_ERROR_IF_EXISTS, CreateSchemaRequest.Options.TRUE
+);
+hDb.createSchema(SCHEMA_NAME, createSchemaOptions);
 ```
 
 The ``InTable`` type and table are created, but the table is removed first if it
@@ -510,14 +531,9 @@ The *exec* mode calls the ``exec()`` method of the ``UdfTcManager.java`` file.
 This method will read files in as bytes, create a proc, and upload the files to
 the proc. The method will then execute the proc.
 
-To interact with *Kinetica*, you must first instantiate an object of the
-``GPUdb`` class while providing the connection URL, including the host and port
-of the database server. Ensure the host address and port are correct for your
-setup:
-
-```java
-GPUdb hDb = new GPUdb("http://" + DATABASE_HOST + ":" + DATABASE_PORT);
-```
+**NOTE:**
+   As noted earlier, a database object is instantiated prior to calling the
+   ``exec()`` method, which takes a database object ``hDB``.
 
 To upload the ``UdfTcManager.jar`` and ``rank_tom.csv`` files to *Kinetica*,
 they will first need to be read in as bytes and added to a file data map:
@@ -554,7 +570,7 @@ System.out.println();
    The proc requires the proper ``command`` and ``args`` to be executed, in
    this case, the assembled command line would be:
 
-     ``java -cp /opt/gpudb/udf/api/java/proc-api/kinetica-proc-api-1.0-jar-with-dependencies.jar:UdfTcJavaProc.jar UdfTcJavaProc``
+     ``java -cp /opt/gpudb/udf/api/java/proc-api/kinetica-proc-api-7.1.0.0-jar-with-dependencies.jar:UdfTcJavaProc.jar UdfTcJavaProc``
 
 Finally, after the proc is created, it can be executed. The input table
 and output table created in the *Initialization* section are passed in here:
@@ -572,6 +588,6 @@ ExecuteProcResponse executeProcResponse = hDb.executeProc(
 );
 System.out.println("Proc executed successfully:");
 System.out.println(executeProcResponse);
-System.out.println("Check 'gpudb.log' or 'gpudb-proc.log' for execution information");
+System.out.println("Check the system log or 'gpudb-proc.log' for execution information");
 System.out.println();
 ```
