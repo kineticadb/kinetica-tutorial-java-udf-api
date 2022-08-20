@@ -1,4 +1,4 @@
-import com.kinetica.*;
+package com.kinetica;
 
 import java.io.File;
 import java.util.Scanner;
@@ -7,11 +7,20 @@ import java.util.Scanner;
 *                                                                              *
 * Kinetica UDF Table Copy Example                                              *
 * -------------------------------------------------------------------------    *
-* This UDF first compares the given CSV file's rank and tom number values      *
-* to the ranks and toms processing the UDF. If the values in the CSV file      *
-* match the ranks and toms found in the request info map, the associated       *
-* data with the matching rank/tom is copied from the input table to the        *
-* output table.                                                                *
+* This distributed UDF will be run by a process on each rank/TOM pair in the   *
+* database.  If the rank/TOM pair associated with a process is found in the    *
+* rank_tom.csv provided to the UDF, that process will copy all of the data in  *
+* the specified input tables located on its rank/TOM to the specified output   *
+* tables, which will be co-located on the same rank/TOM.                       *
+*                                                                              *
+* For example, given the following setup:                                      *
+*                                                                              *
+* * rank_tom.csv contains rank 2, TOM 1                                        *
+* * input table name is udf.in                                                 *
+* * output table name is udf.out                                               *
+*                                                                              *
+* The UDF will copy only the data from udf.in that resides on TOM 1 of rank 2  *
+* to udf.out.                                                                  *
 *                                                                              *
 ***************************************************************************** */
 
@@ -22,18 +31,18 @@ public class UdfTcJavaProc
         // Instantiate a handle to the ProcData object
         ProcData procData = ProcData.get();
 
-        // Initialize boolean that's switched to true if a match is found
+        // Initialize boolean that determines whether the current rank/TOM
+        //   proceess has found itself in the given rank_tom.csv
         boolean foundMatch = false;
 
         // Retrieve rank and TOM from this UDF's request info map; together
-        // these two numbers uniquely identify this instance of the UDF
+        // these two numbers uniquely identify this process of the UDF
         final String procRankNum = procData.getRequestInfo().get("rank_number");
         final String procTomNum = procData.getRequestInfo().get("tom_number");
         try
         {
-            // Read a CSV file (skipping the header) and assign the file's
-            // values to variables that will be checked against the rank and tom
-            // in this proc instance
+            // Read the CSV file (skipping the header) and extract the file's
+            // rank/TOM pairs to determine whether any refer to this process
             Scanner scanner = new Scanner(new File("rank_tom.csv"));
             scanner.nextLine();
             while (scanner.hasNextLine())
@@ -42,29 +51,31 @@ public class UdfTcJavaProc
                 final String fileRankNum = row[0];
                 final String fileTomNum = row[1];
 
-                // Check if this proc instance's rank and tom numbers match the
-                // file's values
+                // Check if this proc instance's rank/TOM match the file values
                 if (procRankNum.equals(fileRankNum) && procTomNum.equals(fileTomNum))
                 {
-                    System.out.println("Match found; processing now...");
-
-                    // Loop through input and output tables (assume the same
-                    // number)
+                    // Loop through the given input tables
                     for (int i = 0; i < procData.getInputData().getTableCount(); i++)
                     {
                         ProcData.InputTable inputTable = procData.getInputData().getTable(i);
                         ProcData.OutputTable outputTable = procData.getOutputData().getTable(i);
                         outputTable.setSize(inputTable.getSize());
 
-                        // Loop through columns in the input and output
-                        // tables (assume the same number and types)
+                        System.out.println(
+                                "Copying <" + inputTable.getSize() + "> records " +
+                                "of <" + inputTable.getColumnCount() + "> columns " +
+                                "on rank/TOM <" + fileRankNum + "/" + fileTomNum + "> " +
+                                "from <" + inputTable.getName() + "> to <" + outputTable.getName() + ">"
+                        );
+
+                        // Loop through the columns in the given input tables
                         for (int j = 0; j < inputTable.getColumnCount(); j++)
                         {
                             ProcData.InputColumn inputColumn = inputTable.getColumn(j);
                             ProcData.OutputColumn outputColumn = outputTable.getColumn(j);
 
-                            // For each record, copy the data from the input
-                            // column to the output column
+                            // For each record on this rank/TOM, copy the data
+                            // from the input column to the output column
                             for (long k = 0; k < inputTable.getSize(); k++)
                             {
                                 switch (inputColumn.getType())
@@ -93,7 +104,7 @@ public class UdfTcJavaProc
                                     case TIME: outputColumn.appendCalendar(inputColumn.getCalendar(k)); break;
                                     case TIMESTAMP: outputColumn.appendLong(inputColumn.getLong(k)); break;
                                     default:
-                                        throw new RuntimeException();
+                                        throw new RuntimeException("Unhandled column type <" + inputColumn.getType() + ">");
                                 }
                             }
                         }
@@ -104,10 +115,12 @@ public class UdfTcJavaProc
             }
             // If no matches exist, don't copy any values
             if (!foundMatch)
-                System.out.println("No rank or tom matches");
+                System.out.println(
+                        "This rank/TOM <" + procRankNum + "/" + procTomNum + "> not present in rank_tom.csv"
+                );
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         // Inform Kinetica that the proc has finished successfully
