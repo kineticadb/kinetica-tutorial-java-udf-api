@@ -72,7 +72,7 @@ There are six files associated with the Java UDF tutorial:
 * A UDF management program,
   [UdfTcManager.java](table-copy/src/main/java/manager/UdfTcManager.java),
   written using the Java API, which creates the input & output tables, and
-  creates the proc and executes it.
+  creates the UDF and executes it.
 * A UDF,
   [UdfTcJavaProc.java](table-copy/src/main/java/udf/UdfTcJavaProc.java),
   written using the Java UDF API, which contains a table copying example.
@@ -114,10 +114,9 @@ There are six files associated with the Java UDF tutorial:
 
 ## API Download and Installation
 
-The Java UDF tutorial requires local access to the Java UDF tutorial
-repository and the Java UDF API. The native Python API must also be
-installed to use the UDF simulator (details found in
-[Development](#development)).
+The Java UDF tutorial requires local access to the Java UDF API & tutorial
+repositories and the Java API. The native Python API must also be installed to
+use the UDF simulator (details found in [Development](#development)).
 
 * In the desired directory, run the following to download the Kinetica Java UDF
   tutorial repository:
@@ -138,7 +137,7 @@ installed to use the UDF simulator (details found in
 
       cd kinetica-api-python
 
-* In the root directory of the repository, install the Kinetica API:
+* In the root directory of the repository, install the Python API:
 
       sudo python setup.py install
 
@@ -161,7 +160,7 @@ installed to use the UDF simulator (details found in
 The steps below outline using the
 [UDF Simulator](https://docs.kinetica.com/7.1/udf/simulating_udfs/),
 included with the Python API. The UDF Simulator simulates the mechanics of
-[executeProc](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
+[executeProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
 without actually calling it in the database; this is useful for developing UDFs
 piece-by-piece and test incrementally, avoiding memory ramifications for the
 database.
@@ -201,7 +200,7 @@ repository without writing anything to the database.
    
       python ../../../kinetica-api-python/examples/udfsim.py execute -d \
          -i [<schema>.]<input-table> -o [<schema>.]<output-table> \
-         -K <kinetica-url> -U <kinetica-user> -P <kinetica-pass>
+         -K <url> -U <username> -P <password>
 
   Where:
 
@@ -209,7 +208,7 @@ repository without writing anything to the database.
   * ``-o`` - schema-qualified UDF output table
   * ``-K`` - Kinetica URL
   * ``-U`` - Kinetica username
-  * ``-P`` - Kinetica password 
+  * ``-P`` - Kinetica password
 
   For instance:
 
@@ -239,7 +238,7 @@ repository without writing anything to the database.
   added to the given output table:
 
       python ../../../kinetica-api-python/examples/udfsim.py output \
-         -K <kinetica-url> -U <kinetica-user> -P <kinetica-pass>
+         -K <url> -U <username> -P <password>
 
   For instance:
 
@@ -267,9 +266,9 @@ repository without writing anything to the database.
 
 If satisfied after testing your UDF with the UDF Simulator or if you want to see
 your UDF in action, the UDF can be created and executed using the UDF methods
-[createProc](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#createProc-java.lang.String-java.lang.String-java.util.Map-java.lang.String-java.util.List-java.util.Map-)
+[createProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#createProc-java.lang.String-java.lang.String-java.util.Map-java.lang.String-java.util.List-java.util.Map-)
 and
-[executeProc](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
+[executeProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
 (respectively).
 
 * Run the UDF manager JAR with the ``init`` option to reset the example
@@ -277,7 +276,7 @@ and
 
       java -jar kinetica-udf-table-copy-manager-7.1.2-jar-with-dependencies.jar init <url> <username> <password>
 
-* Run the UDF manager JAR with the ``exec`` option:
+* Run the UDF manager JAR with the ``exec`` option to run the example:
 
       java -jar kinetica-udf-table-copy-manager-7.1.2-jar-with-dependencies.jar exec <url> <username> <password>
 
@@ -348,10 +347,10 @@ processing node container (*rank*) and processing node (*TOM*) to copy data:
 The ``tom_num`` column values refer to processing nodes that contain the many
 shards of data inside the database. The ``rank_num`` column values refer to
 processing node containers that hold the processing nodes for the database. For
-example, the given CSV file determines that the data from the given input tables
-on processing node container ``1``, processing node ``0`` and processing node
-container ``2``, processing node ``0`` will be copied to the given output tables
-on those same nodes.
+example, the given CSV file determines that the data from
+``udf_tc_java_in_table`` on processing node container ``1``, processing node
+``0`` and processing node container ``2``, processing node ``0`` will be copied
+to ``udf_tc_java_out_table`` on those same nodes.
 
 Once the UDF is executed, a UDF instance (OS process) is spun up for each
 processing node to execute the UDF code against its assigned processing node's
@@ -363,9 +362,9 @@ to the output tables. If there isn't a match, no data will be copied by that
 process.
 
 
-### Initialization (UdfTcManager.java init mode)
+### Initialization (UdfTcManager.java init)
 
-The *init* mode calls the ``init()`` method of the ``UdfTcManager.java`` file.
+The *init* option invokes the ``init()`` method of the ``UdfTcManager`` class.
 This method will create the input table for the UDF to copy data from and the
 output table to copy data to. Sample data will also be generated and inserted
 into the input table.
@@ -473,13 +472,18 @@ System.out.println(showOutputTable.get(0) + " with type id " + showOutputTable.g
 
 ### UDF (UdfTcJavaProc.java)
 
+The ``UdfTcJavaProc`` class is the UDF itself.  It does the work of copying the
+input table data to the output table, based on the ranks & TOMs specified in the
+given CSV file.
+
 First, instantiate a handle to the ``ProcData`` class:
 
 ```java
 ProcData procData = ProcData.get();
 ```
 
-Retrieve rank/TOM pair for this UDF process instance from the request info map:
+Retrieve the rank/TOM pair for this UDF process instance from the request info
+map:
 
 ```java
 final String procRankNum = procData.getRequestInfo().get("rank_number");
@@ -492,7 +496,6 @@ Then, the CSV file mentioned in [Program Files](#program-files) is read
 ```java
 Scanner scanner = new Scanner(new File("rank_tom.csv"));
 scanner.nextLine();
-while (scanner.hasNextLine())
 ```
 
 Compare the rank and TOM of the current UDF instance's processing node to each
@@ -500,11 +503,12 @@ rank/TOM pair in the file to determine if the current UDF instance should copy
 the data on its corresponding processing node:
 
 ```java
-String[] row = scanner.nextLine().split(",", -1);
-final String fileRankNum = row[0];
-final String fileTomNum = row[1];
-
-if (procRankNum.equals(fileRankNum) && procTomNum.equals(fileTomNum))
+while (scanner.hasNextLine())
+{
+    String[] row = scanner.nextLine().split(",", -1);
+    final String fileRankNum = row[0];
+    final String fileTomNum = row[1];
+    if (procRankNum.equals(fileRankNum) && procTomNum.equals(fileTomNum))
 ```
 
 For each input and output table found in the ``inputData`` and ``outputData``
@@ -568,9 +572,9 @@ procData.complete();
 ```
 
 
-### Execution  (UdfTcManager.java exec mode)
+### Execution  (UdfTcManager.java exec)
 
-The *exec* mode calls the ``exec()`` method of the ``UdfTcManager.java`` file.
+The *exec* option invokes the ``exec()`` method of the ``UdfTcManager`` class.
 This method will read files in as bytes, create a UDF, and upload the files to
 the database. The method will then execute the UDF.
 
@@ -579,7 +583,7 @@ they will first need to be read in as bytes and added to a file data map:
 
 ```java
 Map<String, ByteBuffer> filesMap = new HashMap<>();
-for (String fileName : Arrays.asList(CSV_FILE_NAME, PROC_JAR_FILE))
+for (String fileName : Arrays.asList(CSV_FILE, PROC_JAR_FILE))
 {
     byte [] fileAsBytes = Files.readAllBytes(new File(fileName).toPath());
     ByteBuffer fileByteBuffer = ByteBuffer.wrap(fileAsBytes);
@@ -622,20 +626,21 @@ CreateProcResponse createProcResponse = kinetica.createProc(
     java -cp kinetica-udf-table-copy-proc-7.1.2.jar:<UDF API JARs> com.kinetica.UdfTcJavaProc
 
 Finally, after the UDF is created, it can be executed. The input & output tables
-created in the *Initialization* section are passed
-in here:
+created in the [Initialization](#initialization-udftcmanagerjava-init) section are passed in
+here:
 
 ```java
 ExecuteProcResponse executeProcResponse = kinetica.executeProc(
         PROC_NAME,
         null,
         null,
-        Collections.singletonList(INPUT_TABLE),
+        Collections.singletonList(inputTable),
         null,
-        Collections.singletonList(OUTPUT_TABLE),
+        Collections.singletonList(outputTable),
         null
 );
 ```
+
 
 ## Support
 
