@@ -80,7 +80,8 @@ public class UdfTcJavaProc
                             {
                                 switch (inputColumn.getType())
                                 {
-                                    case BYTES: outputColumn.appendVarBytes(inputColumn.getVarBytes(k)); break;
+                                	case BOOLEAN: outputColumn.appendBoolean(inputColumn.getBoolean(k)); break;
+                                	case BYTES: outputColumn.appendVarBytes(inputColumn.getVarBytes(k)); break;
                                     case CHAR1: outputColumn.appendChar(inputColumn.getChar(k)); break;
                                     case CHAR2: outputColumn.appendChar(inputColumn.getChar(k)); break;
                                     case CHAR4: outputColumn.appendChar(inputColumn.getChar(k)); break;
@@ -103,6 +104,8 @@ public class UdfTcJavaProc
                                     case STRING: outputColumn.appendVarString(inputColumn.getVarString(k)); break;
                                     case TIME: outputColumn.appendCalendar(inputColumn.getCalendar(k)); break;
                                     case TIMESTAMP: outputColumn.appendLong(inputColumn.getLong(k)); break;
+                                    case ULONG: outputColumn.appendBigInteger(inputColumn.getBigInteger(k)); break;
+                                    case UUID: outputColumn.appendUUID(inputColumn.getUUID(k)); break;
                                     default:
                                         throw new RuntimeException("Unhandled column type <" + inputColumn.getType() + ">");
                                 }

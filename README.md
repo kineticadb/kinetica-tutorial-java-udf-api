@@ -1,27 +1,27 @@
 <h3 align="center" style="margin:0px">
-	<img width="200" src="https://2wz2rk1b7g6s3mm3mk3dj0lh-wpengine.netdna-ssl.com/wp-content/uploads/2018/08/kinetica_logo.svg" alt="Kinetica Logo"/>
+	<img width="200" src="https://www.kinetica.com/wp-content/uploads/2018/08/kinetica_logo.svg" alt="Kinetica Logo"/>
 </h3>
 <h5 align="center" style="margin:0px">
 	<a href="https://www.kinetica.com/">Website</a>
 	|
-	<a href="https://docs.kinetica.com/7.1/">Docs</a>
+	<a href="https://docs.kinetica.com/7.2/">Docs</a>
 	|
-	<a href="https://docs.kinetica.com/7.1/api/">API Docs</a>
+	<a href="https://docs.kinetica.com/7.2/api/">API Docs</a>
 	|
 	<a href="https://join.slack.com/t/kinetica-community/shared_invite/zt-1bt9x3mvr-uMKrXlSDXfy3oU~sKi84qg">Community Slack</a>   
 </h5>
 <p align = "center">
-	<img src="https://img.shields.io/badge/tested-%3E=v7.1.7-green"></img>
+	<img src="https://img.shields.io/badge/tested-=v7.2.0-green"></img>
 	<img src="https://img.shields.io/badge/time-15 mins-blue"></img>
 </p>
 
 # Kinetica Java UDF API Tutorial #
 
-This project contains the **7.1** version of the **Java UDF API Tutorial**.
+This project contains the **7.2** version of the **Java UDF API Tutorial**.
 
-This guide exists on-line at:  [Kinetica Java UDF API Tutorial](https://docs.kinetica.com/7.1/guides/udf_java_guide/)
+This guide exists on-line at:  [Kinetica Java UDF API Tutorial](https://docs.kinetica.com/7.2/guides/udf_java_guide/)
 
-More information can be found at:  [Kinetica Documentation](https://docs.kinetica.com/7.1/)
+More information can be found at:  [Kinetica Documentation](https://docs.kinetica.com/7.2/)
 
 -----
 
@@ -51,18 +51,18 @@ of the UDF API.
 
 ## References
 
-* [Java UDF Reference](https://docs.kinetica.com/7.1/udf/java/writing/)
+* [Java UDF Reference](https://docs.kinetica.com/7.2/udf/java/writing/)
   -- detailed description of the entire UDF API
-* [Running UDFs](https://docs.kinetica.com/7.1/udf/java/running/)
+* [Running UDFs](https://docs.kinetica.com/7.2/udf/java/running/)
   -- detailed description on running Java UDFs
-* [Example UDFs](https://docs.kinetica.com/7.1/udf/java/examples/)
+* [Example UDFs](https://docs.kinetica.com/7.2/udf/java/examples/)
   -- example UDFs written in Java
 
 
 ## Prerequisites
 
 The general prerequisites for using UDFs in Kinetica can be found on the
-[UDF Implementation](https://docs.kinetica.com/7.1/udf/) page.
+[UDF Implementation](https://docs.kinetica.com/7.2/udf/) page.
 
 
 ### Program Files
@@ -94,7 +94,7 @@ There are six files associated with the Java UDF tutorial:
 
 ### Software
 
-* *Java* 1.7 (or greater)
+* *Java* 1.8 (or greater)
 
   **NOTE:**
      The location of ``java`` should be placed in the ``PATH`` environment
@@ -102,7 +102,7 @@ There are six files associated with the Java UDF tutorial:
      the full path to ``java`` executables in the relevant instructions below.
 
 * *Maven*
-* *Python* 2.7 (or greater) or ``pip``
+* *Python* 3.7 (or greater) or ``pip``
 
   **NOTE:**
      The locations of ``python`` and ``pip`` should be placed in the ``PATH``
@@ -121,17 +121,17 @@ use the UDF simulator (details found in [Development](#development)).
 * In the desired directory, run the following to download the Kinetica Java UDF
   tutorial repository:
 
-      git clone -b release/v7.1 --single-branch https://github.com/kineticadb/kinetica-tutorial-java-udf-api.git
+      git clone -b release/v7.2 --single-branch https://github.com/kineticadb/kinetica-tutorial-java-udf-api.git
 
 * In the same directory, run the following to download the Kinetica Java UDF
   API repository:
 
-      git clone -b release/v7.1 --single-branch https://github.com/kineticadb/kinetica-udf-api-java.git
+      git clone -b release/v7.2 --single-branch https://github.com/kineticadb/kinetica-udf-api-java.git
 
 * In the same directory, run the following to download the Kinetica Python API
   repository:
 
-      git clone -b release/v7.1 --single-branch https://github.com/kineticadb/kinetica-api-python.git
+      git clone -b release/v7.2 --single-branch https://github.com/kineticadb/kinetica-api-python.git
 
 * Change directory into the newly downloaded native Python API repository:
 
@@ -139,9 +139,9 @@ use the UDF simulator (details found in [Development](#development)).
 
 * In the root directory of the repository, install the Python API:
 
-      sudo python setup.py install
+      sudo python3 setup.py install
 
-* Change directory into the Java UDF API directory:
+* Change directory into the Java UDF API repository:
 
       cd ../kinetica-udf-api-java/proc-api
 
@@ -158,9 +158,9 @@ use the UDF simulator (details found in [Development](#development)).
 ## Development
 
 The steps below outline using the
-[UDF Simulator](https://docs.kinetica.com/7.1/udf/simulating_udfs/),
+[UDF Simulator](https://docs.kinetica.com/7.2/udf/simulating_udfs/),
 included with the Python API. The UDF Simulator simulates the mechanics of
-[executeProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
+[executeProc()](https://docs.kinetica.com/7.2/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
 without actually calling it in the database; this is useful for developing UDFs
 piece-by-piece and test incrementally, avoiding memory ramifications for the
 database.
@@ -193,12 +193,12 @@ repository without writing anything to the database.
 * Run the UDF manager JAR with the ``init`` option, specifying the database URL
   and a username & password:
 
-      java -jar kinetica-udf-table-copy-manager-7.1.2-jar-with-dependencies.jar init <url> <username> <password>
+      java -jar kinetica-udf-table-copy-manager-7.2.0-jar-with-dependencies.jar init <url> <username> <password>
 
 * In the native Python API directory, run the UDF Simulator in ``execute``
   mode with the following options to simulate running the UDF:
    
-      python ../../../kinetica-api-python/examples/udfsim.py execute -d \
+      python3 ../../../kinetica-api-python/examples/udfsim.py execute -d \
          -i [<schema>.]<input-table> -o [<schema>.]<output-table> \
          -K <url> -U <username> -P <password>
 
@@ -212,7 +212,7 @@ repository without writing anything to the database.
 
   For instance:
 
-      python ../../../kinetica-api-python/examples/udfsim.py execute -d \
+      python3 ../../../kinetica-api-python/examples/udfsim.py execute -d \
          -i udf_tc_java_in_table -o udf_tc_java_out_table \
          -K http://127.0.0.1:9191 -U admin -P admin123
 
@@ -229,7 +229,7 @@ repository without writing anything to the database.
 
 * Run the UDF:
 
-      java -jar kinetica-udf-table-copy-proc-7.1.2-jar-with-dependencies.jar
+      java -jar kinetica-udf-table-copy-proc-7.2.0-jar-with-dependencies.jar
 
 * Run the UDF Simulator in ``output`` mode to output the results to
   Kinetica (use the dry run flag ``-d`` to avoid writing to Kinetica),
@@ -237,12 +237,12 @@ repository without writing anything to the database.
   as the number of records that were (or will be in the case of a dry run)
   added to the given output table:
 
-      python ../../../kinetica-api-python/examples/udfsim.py output \
+      python3 ../../../kinetica-api-python/examples/udfsim.py output \
          -K <url> -U <username> -P <password>
 
   For instance:
 
-      python ../../../kinetica-api-python/examples/udfsim.py output \
+      python3 ../../../kinetica-api-python/examples/udfsim.py output \
          -K http://127.0.0.1:9191 -U admin -P admin123
 
   This should output the following:
@@ -254,7 +254,7 @@ repository without writing anything to the database.
 
 * Clean the control files output by the UDF Simulator:
 
-      python ../../../kinetica-api-python/examples/udfsim.py clean
+      python3 ../../../kinetica-api-python/examples/udfsim.py clean
 
   **IMPORTANT:**
       The ``clean`` command is only necessary if data was output to Kinetica;
@@ -266,19 +266,19 @@ repository without writing anything to the database.
 
 If satisfied after testing your UDF with the UDF Simulator or if you want to see
 your UDF in action, the UDF can be created and executed using the UDF methods
-[createProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#createProc-java.lang.String-java.lang.String-java.util.Map-java.lang.String-java.util.List-java.util.Map-)
+[createProc()](https://docs.kinetica.com/7.2/api/java/?com/gpudb/GPUdb.html#createProc-java.lang.String-java.lang.String-java.util.Map-java.lang.String-java.util.List-java.util.Map-)
 and
-[executeProc()](https://docs.kinetica.com/7.1/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
+[executeProc()](https://docs.kinetica.com/7.2/api/java/?com/gpudb/GPUdb.html#executeProc-java.lang.String-java.util.Map-java.util.Map-java.util.List-java.util.Map-java.util.List-java.util.Map-)
 (respectively).
 
 * Run the UDF manager JAR with the ``init`` option to reset the example
   tables:
 
-      java -jar kinetica-udf-table-copy-manager-7.1.2-jar-with-dependencies.jar init <url> <username> <password>
+      java -jar kinetica-udf-table-copy-manager-7.2.0-jar-with-dependencies.jar init <url> <username> <password>
 
 * Run the UDF manager JAR with the ``exec`` option to run the example:
 
-      java -jar kinetica-udf-table-copy-manager-7.1.2-jar-with-dependencies.jar exec <url> <username> <password>
+      java -jar kinetica-udf-table-copy-manager-7.2.0-jar-with-dependencies.jar exec <url> <username> <password>
 
 * Verify the results, using a SQL client (KiSQL), Kinetica Workbench, or other:
 
@@ -369,9 +369,9 @@ This method will create the input table for the UDF to copy data from and the
 output table to copy data to. Sample data will also be generated and inserted
 into the input table.
 
-To create tables using the Java API, a [type](https://docs.kinetica.com/7.1/concepts/types/)
+To create tables using the Java API, a [type](https://docs.kinetica.com/7.2/concepts/types/)
 needs to be defined in the system first.  The type is a class, extended from
-[RecordObject](https://docs.kinetica.com/7.1/api/java/?com/gpudb/RecordObject.html),
+[RecordObject](https://docs.kinetica.com/7.2/api/java/?com/gpudb/RecordObject.html),
 using annotations to describe which class instance variables are fields (i.e.
 columns), what type they are, and any special handling they should receive.  
 Each field consists of a name and a data type:
@@ -387,13 +387,6 @@ public static class InTable extends RecordObject
     public Float y;
 
     public InTable() {}
-
-    public InTable(Integer id, Float x, Float y)
-    {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-    }
 }
 
 public static class OutTable extends RecordObject
@@ -406,13 +399,6 @@ public static class OutTable extends RecordObject
     public Float b;
 
     public OutTable() {}
-
-    public OutTable(Integer id, Float a, Float b)
-    {
-        this.id = id;
-        this.a = a;
-        this.b = b;
-    }
 }
 ```
 
@@ -443,15 +429,9 @@ System.out.println(showInputTable.getTableNames().get(0) + " with type id " + sh
 Next, sample data is generated and inserted into the new input table:
 
 ```java
-ArrayList<InTable> allRecords = new ArrayList<>();
-for (int i = 0; i < MAX_RECORDS; i++) {
-    InTable singleRecord = new InTable();
-    singleRecord.id = i;
-    singleRecord.x = (float) rand.nextGaussian() * 1 + 1;
-    singleRecord.y = (float) rand.nextGaussian() * 1 + 2;
-    allRecords.add(singleRecord);
-}
-kinetica.insertRecords(inputTable, allRecords, null);
+Map<String, Double> idOpts = new HashMap<String, Double>() {{put("min", 0.0);put("interval", 1.0);}};
+Map<String, Map<String, Double>> options = new HashMap<String, Map<String, Double>>() {{put("id", idOpts);}};
+kinetica.insertRecordsRandom(inputTable, MAX_RECORDS, options);
 GetRecordsResponse getRecordsResponse = kinetica.getRecords(inputTable, 0, GPUdbBase.END_OF_SET, null);
 System.out.println("Number of records inserted into the input table: " + getRecordsResponse.getTotalNumberOfRecords());
 ```
@@ -535,6 +515,7 @@ for (int j = 0; j < inputTable.getColumnCount(); j++)
     {
         switch (inputColumn.getType())
         {
+            case BOOLEAN: outputColumn.appendBoolean(inputColumn.getBoolean(k)); break;
             case BYTES: outputColumn.appendVarBytes(inputColumn.getVarBytes(k)); break;
             case CHAR1: outputColumn.appendChar(inputColumn.getChar(k)); break;
             case CHAR2: outputColumn.appendChar(inputColumn.getChar(k)); break;
@@ -558,6 +539,8 @@ for (int j = 0; j < inputTable.getColumnCount(); j++)
             case STRING: outputColumn.appendVarString(inputColumn.getVarString(k)); break;
             case TIME: outputColumn.appendCalendar(inputColumn.getCalendar(k)); break;
             case TIMESTAMP: outputColumn.appendLong(inputColumn.getLong(k)); break;
+            case ULONG: outputColumn.appendBigInteger(inputColumn.getBigInteger(k)); break;
+            case UUID: outputColumn.appendUUID(inputColumn.getUUID(k)); break;
             default:
                 throw new RuntimeException("Unhandled column type <" + inputColumn.getType() + ">");
         }
@@ -603,9 +586,7 @@ CreateProcResponse createProcResponse = kinetica.createProc(
         Arrays.asList(
                 "-cp",
                 PROC_JAR_FILE + ":" +
-                    PROC_API_7100_FILE + ":" +
-                    PROC_API_7101_FILE + ":" +
-                    PROC_API_7102_FILE + ":" +
+                    PROC_API_7200_FILE + ":" +
                     PROC_API_FILE,
                 PROC_PATH
         ),
@@ -618,12 +599,12 @@ CreateProcResponse createProcResponse = kinetica.createProc(
    
    * ``java`` as the command to run
    * a classpath parameter including the uploaded UDF JAR and the server-side
-     UDF API JAR (here, all 7.1 versions are included to cover any UDF build)
+     UDF API JAR
    * a parameter that is the fully-qualified class name of the UDF Java class
 
    in this case, the assembled command line would be:
 
-    java -cp kinetica-udf-table-copy-proc-7.1.2.jar:<UDF API JARs> com.kinetica.UdfTcJavaProc
+    java -cp kinetica-udf-table-copy-proc-7.2.0.jar:<UDF API JARs> com.kinetica.UdfTcJavaProc
 
 Finally, after the UDF is created, it can be executed. The input & output tables
 created in the [Initialization](#initialization-udftcmanagerjava-init) section are passed in
@@ -661,4 +642,3 @@ For support, you can post on
   [Follow @kineticadb](https://github.com/kineticadb) 
 * Email us:  <support@kinetica.com>
 * Visit:  <https://www.kinetica.com/contact/>
-

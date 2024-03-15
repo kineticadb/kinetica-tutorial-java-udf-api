@@ -2,6 +2,12 @@ Kinetica Java UDF Tutorial Changelog
 ====================================
 
 
+Version 7.2.0 - 2024-03-14
+--------------------------
+
+- Updated the version to 7.2.0
+
+
 Version 7.1.2 - 2022-08-19
 --------------------------
 

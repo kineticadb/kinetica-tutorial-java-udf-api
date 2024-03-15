@@ -15,11 +15,9 @@ public class UdfTcManager
     static String CSV_FILE = "rank_tom.csv";
     static String PROC_NAME = "UdfTcJavaProc";
     static String PROC_PATH = "com.kinetica." + PROC_NAME;
-    static String PROC_JAR_FILE = "kinetica-udf-table-copy-proc-7.1.2.jar";
+    static String PROC_JAR_FILE = "kinetica-udf-table-copy-proc-7.2.0.jar";
     static String PROC_API_ROOT = "/opt/gpudb/udf/api/java/proc-api/";
-    static String PROC_API_7100_FILE = PROC_API_ROOT + "kinetica-proc-api-7.1.0.0-jar-with-dependencies.jar";
-    static String PROC_API_7101_FILE = PROC_API_ROOT + "kinetica-proc-api-7.1.0.1-jar-with-dependencies.jar";
-    static String PROC_API_7102_FILE = PROC_API_ROOT + "kinetica-proc-api-7.1.0.2-jar-with-dependencies.jar";
+    static String PROC_API_7200_FILE = PROC_API_ROOT + "kinetica-proc-api-7.2.0.0-jar-with-dependencies.jar";
     static String PROC_API_FILE = PROC_API_ROOT + "kinetica-proc-api.jar";
 
     static Random rand = new Random();
@@ -34,13 +32,6 @@ public class UdfTcManager
         public Float y;
 
         public InTable() {}
-
-        public InTable(Integer id, Float x, Float y)
-        {
-            this.id = id;
-            this.x = x;
-            this.y = y;
-        }
     }
 
     public static class OutTable extends RecordObject
@@ -53,13 +44,6 @@ public class UdfTcManager
         public Float b;
 
         public OutTable() {}
-
-        public OutTable(Integer id, Float a, Float b)
-        {
-            this.id = id;
-            this.a = a;
-            this.b = b;
-        }
     }
 
     public static void main(String[] args) throws Exception
@@ -136,15 +120,9 @@ public class UdfTcManager
         System.out.println(showInputTable.getTableNames().get(0) + " with type id " + showInputTable.getTypeIds().get(0));
 
         // Insert randomly-generated data into the input table
-        ArrayList<InTable> allRecords = new ArrayList<>();
-        for (int i = 0; i < MAX_RECORDS; i++) {
-            InTable singleRecord = new InTable();
-            singleRecord.id = i;
-            singleRecord.x = (float) rand.nextGaussian() * 1 + 1;
-            singleRecord.y = (float) rand.nextGaussian() * 1 + 2;
-            allRecords.add(singleRecord);
-        }
-        kinetica.insertRecords(inputTable, allRecords, null);
+        Map<String, Double> idOpts = new HashMap<String, Double>() {{put("min", 0.0);put("interval", 1.0);}};
+        Map<String, Map<String, Double>> options = new HashMap<String, Map<String, Double>>() {{put("id", idOpts);}};
+        kinetica.insertRecordsRandom(inputTable, MAX_RECORDS, options);
         GetRecordsResponse getRecordsResponse = kinetica.getRecords(inputTable, 0, GPUdbBase.END_OF_SET, null);
         System.out.println("Number of records inserted into the input table: " + getRecordsResponse.getTotalNumberOfRecords());
         System.out.println();
@@ -193,9 +171,7 @@ public class UdfTcManager
                 Arrays.asList(
                         "-cp",
                         PROC_JAR_FILE + ":" +
-                            PROC_API_7100_FILE + ":" +
-                            PROC_API_7101_FILE + ":" +
-                            PROC_API_7102_FILE + ":" +
+                            PROC_API_7200_FILE + ":" +
                             PROC_API_FILE,
                         PROC_PATH
                 ),

@@ -5,18 +5,19 @@
     <parent>
         <groupId>com.kinetica</groupId>
         <artifactId>kinetica-udf-table-copy-example</artifactId>
-        <version>7.1.2</version>
+        <version>7.2.0</version>
     </parent>
 
     <artifactId>kinetica-udf-table-copy-manager</artifactId>
     <packaging>jar</packaging>
 
     <properties>
-        <gpudb-api.version>[7.1.0.0,7.2.0.0-SNAPSHOT)</gpudb-api.version>
-        <kinetica-proc-api.version>[7.1.0.0,7.2.0.0-SNAPSHOT)</kinetica-proc-api.version>
-        <java.version>1.7</java.version>
+        <gpudb-api.version>[7.2.0.0,7.3.0.0-SNAPSHOT)</gpudb-api.version>
+        <kinetica-proc-api.version>[7.2.0.0,7.3.0.0-SNAPSHOT)</kinetica-proc-api.version>
+        <java.version>1.8</java.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.4.2</maven-assembly-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
